@@ -38,9 +38,12 @@ public abstract class Reunion {
         this.notas =  new ArrayList<>();
     }
 
-    public void inciar() {
-        this.horaInicio = Instant.now();
+    public void iniciar() throws ReunionYaFinalizadaException {
+    if (horaFin != null) {
+        throw new ReunionYaFinalizadaException("La reunion ya finalizo y no puede reiniciarse");
     }
+    this.horaInicio = Instant.now();
+}
 
     public void finalizar() {
         this.horaFin = Instant.now();
