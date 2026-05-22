@@ -1,4 +1,7 @@
 package reuniones.gestion;
 
-public class TipoReunion {
+public enum TipoReunion {
+    TECNICA,
+    MARKETING,
+    OTRO
 }

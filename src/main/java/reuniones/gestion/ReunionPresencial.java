@@ -8,8 +8,8 @@ import java.util.Date;
 public class ReunionPresencial extends Reunion {
     private String sala;
 
-    public ReunionPresencial(Date fecha, Instant horaAgendada, Duration duracionAgendada, TipoReunion tipoReunion, Empleado organizador, String enlace) {
-        super(fecha, horaAgendada, duracionAgendada, tipoReunion, organizador);
+    public ReunionPresencial(Date fecha, Instant horaPrevista, Duration duracionPrevista, TipoReunion tipoReunion, Empleado organizador, String sala) {
+        super(fecha, horaPrevista, duracionPrevista, tipoReunion, organizador);
         this.sala = sala;
     }
 
@@ -19,6 +19,6 @@ public class ReunionPresencial extends Reunion {
 
     @Override
     public String toString() {
-        return "Reunion Presencial (Enlace: " + sala + ") - Tipo de Reunión: " + super.getTipoReunion();
+        return "Reunión Presencial (Sala: " + sala + ") - Tipo de Reunión: " + super.getTipoReunion();
     }
 }

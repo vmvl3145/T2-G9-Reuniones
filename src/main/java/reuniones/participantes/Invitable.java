@@ -1,4 +1,5 @@
 package reuniones.participantes;
 
-public class Invitable {
+public interface Invitable {
+    void invitar();
 }
