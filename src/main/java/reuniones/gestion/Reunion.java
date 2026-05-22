@@ -39,15 +39,19 @@ public abstract class Reunion {
     }
 
     public void iniciar() throws ReunionYaFinalizadaException {
-    if (horaFin != null) {
-        throw new ReunionYaFinalizadaException("La reunion ya finalizo y no puede reiniciarse");
-    }
-    this.horaInicio = Instant.now();
+        if (horaFin != null) {
+            throw new ReunionYaFinalizadaException("La reunion ya finalizo y no puede reiniciarse");
+        }
+        this.horaInicio = Instant.now();
 }
 
-    public void finalizar() {
+    public void finalizar() throws ReunionNoIniciadaException {
+        if (horaInicio == null) {
+            throw new ReunionNoIniciadaException("No se puede finalizar una reunion que no ha sido iniciada.");
+        }
         this.horaFin = Instant.now();
-    }
+}
+
 
     public float calcularTiempoReal() {
         if (horaInicio == null || horaFin == null) {
@@ -62,13 +66,24 @@ public abstract class Reunion {
         invitaciones.add(nuevaInvitacion);
     }
 
-    public void registrarAsistencia(Invitable persona, Instant horaLlegada) {
-        asistencias.add(new Asistencia(persona));
-
-        if (horaLlegada.isAfter(horaAgendada)) {
-            retrasos.add(new Retraso(horaLlegada));
-        }
+    public void registrarAsistencia(Invitable persona, Instant horaLlegada)
+        throws ReunionNoIniciadaException, ReunionYaFinalizadaException, EmpleadoNoInvitadoException {
+    if (horaInicio == null) {
+        throw new ReunionNoIniciadaException("No se puede registrar asistencia antes de iniciar la reunion.");
     }
+    if (horaFin != null) {
+        throw new ReunionYaFinalizadaException("No se puede registrar asistencia en una reunion que ya acabo.");
+    }
+    boolean estaInvitada = invitaciones.stream()
+            .anyMatch(inv -> inv.getInvitado().equals(persona));
+    if (!estaInvitada) {
+        throw new EmpleadoNoInvitadoException("La persona no fue invitada: " + persona.getNombre());
+    }
+    asistencias.add(new Asistencia(persona));
+    if (horaLlegada.isAfter(horaAgendada)) {
+        retrasos.add(new Retraso(horaLlegada));
+    }
+}
 
     public void agregarNota(String contenido) {
         notas.add(new Nota(contenido));
