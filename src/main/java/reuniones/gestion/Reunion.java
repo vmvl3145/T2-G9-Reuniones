@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Date;
 import java.time.Duration;
 import java.time.Instant;
+import reuniones.excepciones.EmpleadoNoInvitadoException;
+import reuniones.excepciones.ReunionNoIniciadaException;
+import reuniones.excepciones.ReunionYaFinalizadaException;
 
 public abstract class Reunion {
     private Date fecha;
