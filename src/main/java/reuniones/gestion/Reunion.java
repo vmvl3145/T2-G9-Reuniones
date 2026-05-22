@@ -132,9 +132,11 @@ public abstract class Reunion {
         return horaFin;
     }
     public List<Nota> getNotas() { return notas; }
-}
+
 
 public List<Invitacion> getInvitaciones() { return invitaciones; }
 public Instant getHoraAgendada() { return horaAgendada; }
 public Duration getDuracionAgendada() { return duracionAgendada; }
 public Empleado getOrganizador() { return organizador; }
+
+}
