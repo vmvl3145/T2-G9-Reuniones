@@ -1,5 +1,24 @@
 package gestion;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import reuniones.excepciones.ReunionNoIniciadaException;
+import reuniones.gestion.InformeReunion;
+import reuniones.gestion.TipoReunion;
+import reuniones.participantes.Departamento;
+import reuniones.participantes.Empleado;
+
+import reuniones.gestion.Reunion;
+import reuniones.gestion.ReunionVirtual;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 public class InformeReunionTest {
 
     // Metodo auxiliar para crear datos de prueba
