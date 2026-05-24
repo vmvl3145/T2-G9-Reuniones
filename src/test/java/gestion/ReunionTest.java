@@ -1,5 +1,22 @@
 package gestion;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import reuniones.excepciones.ReunionNoIniciadaException;
+import reuniones.excepciones.ReunionYaFinalizadaException;
+import reuniones.excepciones.EmpleadoNoInvitadoException;
+import reuniones.gestion.Reunion;
+import reuniones.gestion.TipoReunion;
+import reuniones.participantes.Departamento;
+import reuniones.participantes.Empleado;
+import reuniones.participantes.InvitadoExterno;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 public class ReunionTest {
 
     private Reunion reunion;
