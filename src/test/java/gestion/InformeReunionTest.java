@@ -76,7 +76,6 @@ public class InformeReunionTest {
 
     /**
      * Verifica que el informe se pueda escribir correctamente en un archivo de texto físico (.txt) utilizando un directorio temporal de JUnit.
-     *
      * @param carpetaTemporal Directorio inyectado por JUnit para pruebas de I/O.
      * @throws Exception Si ocurre un error durante la escritura del archivo físico. */
     @Test
