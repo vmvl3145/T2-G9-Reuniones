@@ -2,11 +2,13 @@ package reuniones.gestion;
 
 import java.time.Instant;
 
-//Retraso de un participante en una reunion cuando alguien llega despues de la hora
+/** Representa el retraso de un participante en una reunion.
+ * Se registra cuando una persona marca su asistencia despues de la hora agendada. */
 public class Retraso {
     private Instant hora;
 
-    //crea un retraso con la hora real de llegada del participante.
+    /** Crea un registro de retraso con la hora real de llegada del participante.
+     * @param hora La hora exacta en la que el participante se unio a la reunion. */
     public Retraso(Instant hora) {
         this.hora = hora;
     }

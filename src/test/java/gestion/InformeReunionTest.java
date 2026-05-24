@@ -19,9 +19,12 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/** Clase de pruebas unitarias para validar la correcta generación y guardado físico de los informes de reunión.*/
 public class InformeReunionTest {
 
-    // Metodo auxiliar para crear datos de prueba
+    /**Método auxiliar para crear una reunión virtual con datos de prueba predefinidos.
+     *
+     * @return Una instancia de ReunionVirtual lista para ser utilizada en los tests.*/
     private ReunionVirtual crearReunionDePrueba() {
         Date fecha = new Date();
         Instant horaAgendada = Instant.now();
@@ -32,6 +35,7 @@ public class InformeReunionTest {
         return new ReunionVirtual(fecha, horaAgendada, duracion, TipoReunion.TECNICA, organizador, "https://zoom.cl/testReunion");
     }
 
+    /** Verifica que el sistema lance una excepción si se intenta generar el contenidode un informe para una reunión que no ha sido finalizada. */
     @Test
     public void testGenerarContenidoLanzaExcepcionSiNoEstaFinalizada() {
         Reunion reuInc = crearReunionDePrueba();
@@ -47,6 +51,8 @@ public class InformeReunionTest {
         assertEquals("El informe solo puede generarse de una reunion finalizada.", excepcion.getMessage());
     }
 
+    /** Verifica que el contenido del informe se genere correctamente en formato String, comprobando que incluya las secciones clave y las notas agregadas.
+     * @throws Exception Si ocurre un error al pausar el hilo o generar el contenido.*/
     @Test
     public void testGenerarContenidoReunionVirtualExitosa() throws Exception {
         Reunion reuLista = crearReunionDePrueba();
@@ -68,6 +74,11 @@ public class InformeReunionTest {
                 "Debe contener la nota creada al finalizar la reunion");
     }
 
+    /**
+     * Verifica que el informe se pueda escribir correctamente en un archivo de texto físico (.txt) utilizando un directorio temporal de JUnit.
+     *
+     * @param carpetaTemporal Directorio inyectado por JUnit para pruebas de I/O.
+     * @throws Exception Si ocurre un error durante la escritura del archivo físico. */
     @Test
     public void testGuardarEnArchivoFisico(@TempDir Path carpetaTemporal) throws Exception {
         Reunion reuValida = crearReunionDePrueba();

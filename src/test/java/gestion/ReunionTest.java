@@ -17,6 +17,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/** Clase de pruebas unitarias encargada de validar la lógica central de las reuniones, abarcando el ciclo de vida, registro de asistencia, retrasos y manejo de excepciones */
 public class ReunionTest {
 
     private Reunion reunion;
@@ -25,6 +26,8 @@ public class ReunionTest {
     private InvitadoExterno externoInvitado;
     private Empleado noInvitado;
 
+    /** Configuración inicial antes de cada prueba.
+     * Instancia a los actores necesarios y una reunión genérica. */
     @BeforeEach
     public void setUp() {
         Departamento dep = new Departamento("IT");
@@ -42,6 +45,8 @@ public class ReunionTest {
 
     // TESTS DE CICLO DE VIDA
 
+    /** Verifica que al iniciar una reunión, la hora de inicio se registre correctamente.
+     * @throws ReunionYaFinalizadaException Si la reunión ya había finalizado. */
     @Test
     public void testIniciarReunionExitosa() throws ReunionYaFinalizadaException {
         assertNull(reunion.getHoraInicio(), "La hora de inicio debe ser nula antes de iniciar");
@@ -49,6 +54,7 @@ public class ReunionTest {
         assertNotNull(reunion.getHoraInicio(), "La hora de inicio no debe ser nula tras el inicio de la reunion");
     }
 
+    /** Verifica que se lance una excepción al intentar finalizar una reunión que no ha iniciado. */
     @Test
     public void testFinalizarReunionSinIniciarLanzaExcepcion() {
         assertThrows(ReunionNoIniciadaException.class,
@@ -56,6 +62,8 @@ public class ReunionTest {
                 "Debe lanzar excepcion si se intenta finalizar sin iniciar");
     }
 
+    /** Verifica que se lance una excepción si se intenta iniciar una reunión que ya fue finalizada.
+     * @throws Exception Manejo genérico de excepciones de flujo. */
     @Test
     public void testIniciarReunionYaFinalizadaLanzaExcepcion() throws Exception {
         reunion.iniciar();
@@ -68,6 +76,7 @@ public class ReunionTest {
 
     // TESTS DE INVITACIONES Y ASISTENCIAS
 
+    /** Verifica que el método invitar añada correctamente a las personas a la lista de invitaciones.*/
     @Test
     public void testInvitarAgregaALaLista() {
         reunion.invitar(empleadoInvitado);
@@ -77,6 +86,8 @@ public class ReunionTest {
         assertEquals(empleadoInvitado, reunion.getInvitaciones().get(0).getInvitado());
     }
 
+    /** Verifica que se registre correctamente la asistencia de un invitado puntual.
+     * @throws Exception Si la reunión no es válida para la operación. */
     @Test
     public void testRegistrarAsistenciaExitosa() throws Exception {
         reunion.invitar(empleadoInvitado);
@@ -88,6 +99,8 @@ public class ReunionTest {
         assertEquals(0, reunion.obtenerRetrasos().size(), "No debe haber retrasos si llega a la hora");
     }
 
+    /** Verifica que el registro de un participante que llega tarde genere un registro en la lista de retrasos.
+     * @throws Exception Si la reunión no es válida para la operación.  */
     @Test
     public void testRegistrarAsistenciaConRetraso() throws Exception {
         reunion.invitar(externoInvitado);
@@ -102,6 +115,7 @@ public class ReunionTest {
 
     // TEST EXCEPCIONES EN ASISTENCIA
 
+    /** Verifica que no se pueda registrar la asistencia si la reunión no ha marcado su inicio oficial. */
     @Test
     public void testRegistrarAsistenciaAntesDeIniciarLanzaExcepcion() {
         reunion.invitar(empleadoInvitado);
@@ -111,6 +125,8 @@ public class ReunionTest {
                 () -> reunion.registrarAsistencia(empleadoInvitado, llegada));
     }
 
+    /** Verifica que un empleado no invitado genere una excepción al intentar marcar asistencia.
+     * @throws ReunionYaFinalizadaException Si la reunión ya terminó. */
     @Test
     public void testRegistrarAsistenciaNoInvitadoLanzaExcepcion() throws ReunionYaFinalizadaException {
         reunion.iniciar();
@@ -120,6 +136,8 @@ public class ReunionTest {
                 () -> reunion.registrarAsistencia(noInvitado, llegada));
     }
 
+    /** Verifica que no se pueda registrar asistencia una vez que el organizador finaliza la reunión.
+     * @throws Exception Manejo genérico de excepciones de flujo. */
     @Test
     public void testRegistrarAsistenciaDespuesDeFinalizarLanzaExcepcion() throws Exception {
         reunion.invitar(empleadoInvitado);
@@ -133,6 +151,8 @@ public class ReunionTest {
 
     // TESTS ESTADISTICAS (Ausencias y Porcentajes
 
+    /** Verifica los cálculos matemáticos y lógicos para el porcentaje de asistencia y conteo de ausentes.
+     * @throws Exception Manejo genérico de excepciones de flujo. */
     @Test
     public void testObtenerAusenciasYPorcentaje() throws Exception {
         reunion.invitar(empleadoInvitado);

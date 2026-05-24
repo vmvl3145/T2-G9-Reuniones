@@ -7,16 +7,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-//genera y guarda el informe de una reunion en un archivo .txt
+/** Genera y guarda el informe de una reunion en un archivo .txt.
+ * Contiene los detalles de tiempos, participantes, ausencias, retrasos y notas. */
 public class InformeReunion {
     private Reunion reunion;
 
-    //crea un informe para la reunion
+    /**Crea un informe para la reunion especificada.
+     * @param reunion La reunion de la cual se generara el informe. */
     public InformeReunion(Reunion reunion) {
         this.reunion = reunion;
     }
 
-    //genera el contenido del informe
+    /** Genera el contenido del informe recopilando los datos de la reunion.
+     * @return Un String con el formato completo del informe.
+     * @throws ReunionNoIniciadaException Si se intenta generar un informe de una reunion incompleta. */
     public String generarContenido() throws ReunionNoIniciadaException {
         if (reunion.getHoraInicio() == null || reunion.getHoraFin() == null) {
             throw new ReunionNoIniciadaException("El informe solo puede generarse de una reunion finalizada.");
@@ -71,7 +75,10 @@ public class InformeReunion {
         return sb.toString();
     }
 
-    //guarda informe en un archivo .txt
+    /** Guarda el informe generado en un archivo fisico de texto.
+     * @param rutaArchivo La ruta y nombre del archivo (ej. "informe.txt").
+     * @throws ReunionNoIniciadaException Si la reunion no es valida para el informe.
+     * @throws IOException Si ocurre un error al escribir el archivo en el disco. */
     public void guardarEnArchivo(String rutaArchivo) throws ReunionNoIniciadaException, IOException {
         String contenido = generarContenido();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {

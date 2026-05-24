@@ -2,6 +2,7 @@ package reuniones.gestion;
 
 import reuniones.participantes.Empleado;
 import reuniones.participantes.Invitable;
+import reuniones.participantes.Departamento;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -11,6 +12,7 @@ import reuniones.excepciones.EmpleadoNoInvitadoException;
 import reuniones.excepciones.ReunionNoIniciadaException;
 import reuniones.excepciones.ReunionYaFinalizadaException;
 
+/** Clase abstracta que define la estructura base y la lógica compartida para cualquier tipo de reunión dentro del sistema.*/
 public abstract class Reunion {
     private Date fecha;
     private Instant horaAgendada;
@@ -25,6 +27,13 @@ public abstract class Reunion {
     private List<Retraso> retrasos;
     private List<Nota> notas;
 
+    /** Construye la base de una reunión con sus datos de planificación
+     * @param fecha Día agendado.
+     * @param horaAgendada Hora estipulada de inicio.
+     * @param duracionAgendada Duración planificada.
+     * @param tipoReunion Clasificación de la reunión.
+     * @param organizador Empleado responsable. */
+
     public Reunion(Date fecha, Instant horaAgendada, Duration duracionAgendada, TipoReunion tipoReunion, Empleado organizador) {
         this.fecha = fecha;
         this.horaAgendada = horaAgendada;
@@ -38,6 +47,8 @@ public abstract class Reunion {
         this.notas =  new ArrayList<>();
     }
 
+    /** Da inicio a la reunión, marcando la hora actual del sistema.
+     * @throws ReunionYaFinalizadaException Si se intenta iniciar una reunión que ya terminó. */
     public void iniciar() throws ReunionYaFinalizadaException {
         if (horaFin != null) {
             throw new ReunionYaFinalizadaException("La reunion ya finalizo y no puede reiniciarse");
@@ -45,6 +56,8 @@ public abstract class Reunion {
         this.horaInicio = Instant.now();
 }
 
+    /** Da por concluida la reunión, marcando la hora final del sistema.
+     * @throws ReunionNoIniciadaException Si se intenta terminar una reunión que no ha empezado.*/
     public void finalizar() throws ReunionNoIniciadaException {
         if (horaInicio == null) {
             throw new ReunionNoIniciadaException("No se puede finalizar una reunion que no ha sido iniciada.");
@@ -52,7 +65,8 @@ public abstract class Reunion {
         this.horaFin = Instant.now();
 }
 
-
+    /** Calcula los minutos exactos transcurridos entre el inicio y el fin.
+     * @return El tiempo real en minutos, o 0 si la reunión está incompleta. */
     public float calcularTiempoReal() {
         if (horaInicio == null || horaFin == null) {
             return 0f;
@@ -61,11 +75,29 @@ public abstract class Reunion {
         return tiempoReal.toMinutes();
     }
 
+    /** Añade a un participante individual a la lista de convocados.
+     * @param persona El objeto Invitable a convocar. */
     public void invitar(Invitable persona) {
         Invitacion nuevaInvitacion = new Invitacion(persona, Instant.now());
         invitaciones.add(nuevaInvitacion);
     }
 
+    /**
+     * Invita a todos los empleados pertenecientes a un departamento específico a la reunión.
+     * @param depto El departamento que será invitado de forma masiva.
+     */
+    public void invitarDepartamento(Departamento depto) {
+        for (Empleado empleado : depto.getEmpleados()) {
+            this.invitar(empleado);
+        }
+    }
+
+    /** Registra la llegada de un invitado, validando los estados de la reunión y creando un retraso automáticamente si corresponde.
+     * @param persona El participante que llegó.
+     * @param horaLlegada La hora exacta en la que se presentó
+     * @throws ReunionNoIniciadaException Si la reunión no ha comenzado
+     * @throws ReunionYaFinalizadaException Si la reunión ya terminó
+     * @throws EmpleadoNoInvitadoException Si la persona no estaba en la lista de invitaciones */
     public void registrarAsistencia(Invitable persona, Instant horaLlegada)
         throws ReunionNoIniciadaException, ReunionYaFinalizadaException, EmpleadoNoInvitadoException {
     if (horaInicio == null) {
@@ -85,6 +117,8 @@ public abstract class Reunion {
     }
 }
 
+    /** Añade una nota o apunte al registro de la reunión.
+     * @param contenido El texto de la nota. */
     public void agregarNota(String contenido) {
         notas.add(new Nota(contenido));
     }
@@ -94,6 +128,9 @@ public abstract class Reunion {
     public List<Retraso> obtenerRetrasos() {
         return retrasos;
     }
+
+    /** Calcula la lista de personas que fueron invitadas pero no registraron asistencia.
+     * @return Lista de participantes ausentes. */
     public List<Invitable> obtenerAusencias() {
         List<Invitable> ausentes = new ArrayList<>();
         for (Invitacion inv : invitaciones) {
